@@ -1,1 +1,135 @@
-Initial commit
+<meta charset="UTF-8">
+<html></html>
+<head>
+    <title>Emoji 2 IP</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        label {
+            display: flex;
+            padding: 1em;
+            align-items: flex-end;
+        }
+
+        label span {
+            display: block;
+            width: 100px;
+            font-size: 16px;
+            padding-left: 12px;
+        }
+
+        input {
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #999;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #0099f0;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: #0079c0;
+            color: #fff;
+            font-size: 14px;
+            padding: 14px 0;
+            border-radius: 12px;
+            width: 140px;
+            margin-left: 20px;
+        }
+
+        button:hover {
+            background: #0099f0;
+        }
+
+        body > div {
+            padding: 10px 20px;
+        }
+
+        label > div {
+            display: flex;
+            flex-direction: column;
+            width: 160px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Emoji 2 IP</h1>
+    <label>
+        <div>
+            <span>Emoji</span>
+            <input id='emoji' />
+        </div>
+        <button onclick="calculateIp()">Calculate IP</button>
+    </label>
+    <div id='emoji-out'></div>
+    
+    <label>
+        <div>
+            <span>IP Address</span>
+            <input id='ip' />
+        </div>
+        <button onclick="calculateEmoji()">Calculate Emoji</button>
+    </label>
+    <div id='ip-out'></div>
+
+    <script>
+        function encodeUtf8 (c) { return unescape(encodeURIComponent(c)); }
+
+        function calculateIp() {
+            let inputStr = document.getElementById('emoji').value;//'💩';
+            if (!inputStr) {
+                alert('You need to actually enter an emoji :)');
+                return;
+            }
+            let utf8 = encodeUtf8(inputStr);
+            let chars = [];
+
+            var ip = '';
+            for (let i = 0; i < utf8.length; i++) {
+                if (i < 4) {
+                    let charCode = utf8.charCodeAt(i);
+
+                    if (isNaN(charCode))
+                        charCode = 0;
+                    
+                    ip += charCode + '.';
+                }
+            }
+
+            for (let j = 4 - utf8.length; j > 0; j--) {
+                ip += '0.';
+            }
+
+            ip = ip.substr(0, ip.length - 1);
+            
+            document.getElementById('emoji-out').innerHTML = 'IP Address for that emoji: ' + ip;
+        }
+
+        function calculateEmoji() {
+            let str;
+
+            try {
+                let inputStr = document.getElementById('ip').value;
+                let values = inputStr.split('.').map(s => parseInt(s));
+                str = decodeURIComponent(escape(String.fromCodePoint(...values)))
+            }
+            catch (err) {
+                str = "💩 Couldn't find an emoji for that IP";
+            }
+
+            document.getElementById('ip-out').innerHTML = str + ' lives there.';
+        }
+
+        //getUserIP();
+        console.log('💩💩💩💩💩💩💩💩');
+        console.log("I know that's what you wanted. You're welcome.");
+    </script>
+</body>
+
